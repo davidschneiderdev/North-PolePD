@@ -80,7 +80,7 @@ function createTitleArray(object) {
     return newArray;
 }
 
-const caseArray = database.cases;
+// const caseArray = database.cases;
 const titlesArray = createTitleArray(database);
 
 // for (let el of titlesArray) {
@@ -111,7 +111,7 @@ function coalPerPerson(caseArray) {
                 coals: numCoals
             }
     }
-    console.log(result);
+    return result;
 }
 
 
@@ -128,16 +128,24 @@ function crimesPerPerson(caseArray) {
             result[item.name] = 1;
         }
     }
-    console.log(result);
+    return result;
 }
 
+function createSortedItemsArray(caseArray) {
+    let crimesPerPersonArray = crimesPerPerson(caseArray);
+    let itemsArray = Object.keys(crimesPerPersonArray).map(function(key) {
+        return [key, crimesPerPersonArray[key]];
+    });
+    itemsArray.sort(function(first, second) {
+        return second[1] - first[1];
+    });
+    return itemsArray;
+}
 
+function returnWantedList(object) {
+    let openCases = object.cases.filter(isOpen);
+    let topWanted = createSortedItemsArray(openCases);
+    return topWanted.slice(0, 10);
+}
 
-crimesPerPerson(caseArray);
-
-
-
-
-
-
-
+console.log(returnWantedList(database));
